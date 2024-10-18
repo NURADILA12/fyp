@@ -72,7 +72,7 @@
             </li>
     
             <li class="nav-item">
-                <a class="nav-link {{ request()->routeIs('admin.laporan') ? 'active' : '' }}" href="{{ route('admin.laporan') }}">
+                <a class="nav-link {{ request()->routeIs('apm.laporan') ? 'active' : '' }}" href="{{ route('apm.laporan') }}">
                     <i class="bi bi-file-earmark-text"></i> Laporan
                 </a>
             </li>

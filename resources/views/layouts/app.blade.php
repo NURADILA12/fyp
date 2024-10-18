@@ -71,7 +71,7 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link {{ request()->routeIs('apm.kehadiran') ? 'active' : '' }}" href="{{ route('apm.kehadiran') }}">
+                <a class="nav-link {{ request()->routeIs('admin.kehadiran') ? 'active' : '' }}" href="{{ route('admin.kehadiran') }}">
                     <i class="bi bi-people"></i> Pelajar
                 </a>
             </li>

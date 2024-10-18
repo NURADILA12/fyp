@@ -5,6 +5,7 @@ use App\Http\Controllers\PelajarController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ApmController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\KehadiranController;
 use Illuminate\Support\Facades\Route;
 
 // Route utama
@@ -13,9 +14,9 @@ Route::get('/', function () {
 });
 
 // Route Dashboard untuk Pengguna yang Sah
-Route::get('/dashboard', [AdminController::class, 'index'])
+Route::get('apm/dashboard', [AdminController::class, 'index'])
     ->middleware(['auth', 'verified'])
-    ->name('dashboard');
+    ->name('apm');
 
 // Protected Routes untuk Pengguna yang Sah
 Route::middleware('auth')->group(function () {
@@ -41,10 +42,17 @@ Route::middleware(['auth', 'admin'])->group(function () {
 
 // Route Khusus APM
 Route::middleware(['auth', 'apm'])->group(function () {
-    Route::get('apm/kehadiran', [AdminController::class, 'kehadiran'])->name('apm.kehadiran');
+    // Paparan dashboard APM (pastikan route dan method betul)
     Route::get('apm', [ApmController::class, 'index'])->name('apm.dashboard');
-    Route::post('apm/kehadiran', [AdminController::class, 'storeKehadiran'])->name('apm.storeKehadiran'); // Store attendance
-    Route::get('apm/kehadiran/{id}/edit', [AdminController::class, 'editKehadiran'])->name('apm.editKehadiran'); // Edit attendance
+    
+    // Kehadiran APM
+    Route::get('apm/kehadiran', [ApmController::class, 'viewAttendance'])->name('apm.kehadiran'); 
+    
+    // Laporan APM
+    Route::get('apm/laporan', [ApmController::class, 'laporan'])->name('apm.laporan');
+
+    // Store attendance (gunakan KehadiranController jika diperlukan)
+    Route::post('/kehadiran', [KehadiranController::class, 'tandakanKehadiran'])->name('apm.kehadiran.store');
 });
 
 // Route Logout

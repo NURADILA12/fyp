@@ -9,8 +9,22 @@ use Illuminate\Http\Request;
 class ApmController extends Controller
 {
     public function index() {
+        // Ambil semua pelajar
         $students = Pelajar::all();
-        return view('apm.dashboard', compact('students'));
+        $pelajar_dipantau = $students->count(); // Jumlah pelajar dipantau
+
+        // Ambil kehadiran untuk hari ini
+        $kehadiran_hari_ini = Kehadiran::whereDate('date', now()->format('Y-m-d'))
+            ->where('status', 'hadir')
+            ->count();
+
+        // Hitung bilangan tidak hadir
+        $tidak_hadir = $pelajar_dipantau - $kehadiran_hari_ini;
+
+        // Hantar data ke view
+        return view('apm.dashboard', compact(
+            'students', 'pelajar_dipantau', 'kehadiran_hari_ini', 'tidak_hadir'
+        ));
     }
 
     public function storeAttendance(Request $request) {
@@ -27,5 +41,13 @@ class ApmController extends Controller
     public function viewAttendance() {
         $attendanceRecords = Kehadiran::with('student')->get();
         return view('apm.kehadiran', compact('attendanceRecords'));
+    }
+
+    public function kehadiran() {
+        return view('apm.kehadiran');
+    }
+
+    public function laporan() {
+        return view('apm.laporan');
     }
 }
