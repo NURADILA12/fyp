@@ -13,8 +13,9 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         
         $middleware->alias([
-            'admin' => \App\Http\Middleware\Admin::class,
-            'apm' => \App\Http\Middleware\APM::class, // Add APM middleware here if needed
+            // 'admin' => \App\Http\Middleware\Admin::class,
+            // 'apm' => \App\Http\Middleware\APM::class, // Add APM middleware here if needed
+            'role' => \App\Http\Middleware\RoleMiddleware::class,
         ]);
         
 

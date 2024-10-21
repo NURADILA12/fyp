@@ -12,21 +12,21 @@ class ApmController extends Controller
         // Ambil semua pelajar
         $students = Pelajar::all();
         $pelajar_dipantau = $students->count(); // Jumlah pelajar dipantau
-
+    
         // Ambil kehadiran untuk hari ini
-        $kehadiran_hari_ini = Kehadiran::whereDate('date', now()->format('Y-m-d'))
+        $total_hadir = Kehadiran::whereDate('date', now()->format('Y-m-d'))
             ->where('status', 'hadir')
             ->count();
-
+    
         // Hitung bilangan tidak hadir
-        $tidak_hadir = $pelajar_dipantau - $kehadiran_hari_ini;
-
+        $total_tidak_hadir = $pelajar_dipantau - $total_hadir; // Update to use $total_hadir
+    
         // Hantar data ke view
         return view('apm.dashboard', compact(
-            'students', 'pelajar_dipantau', 'kehadiran_hari_ini', 'tidak_hadir'
+            'students', 'pelajar_dipantau', 'total_hadir', 'total_tidak_hadir' // Pass both variables to the view
         ));
     }
-
+    
     public function storeAttendance(Request $request) {
         foreach ($request->attendance as $studentId => $status) {
             Kehadiran::updateOrCreate(
@@ -40,14 +40,14 @@ class ApmController extends Controller
 
     public function viewAttendance() {
         $attendanceRecords = Kehadiran::with('student')->get();
-        return view('apm.kehadiran', compact('attendanceRecords'));
+        return view('apm.kehadiran', compact('attendanceData'));
     }
 
-    public function kehadiran() {
-        return view('apm.kehadiran');
+    public function showAttendanceForm() {
+        return view('apm.kehadiran'); // Form for attendance
     }
 
-    public function laporan() {
-        return view('apm.laporan');
+    public function showReport() {
+        return view('apm.laporan'); // Report view
     }
 }

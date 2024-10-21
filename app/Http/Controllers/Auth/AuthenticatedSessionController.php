@@ -22,19 +22,45 @@ class AuthenticatedSessionController extends Controller
     /**
      * Handle an incoming authentication request.
      */
-    public function store(LoginRequest $request): RedirectResponse
+    public function store(LoginRequest $request)
     {
-        $request->authenticate();
-        $request->session()->regenerate();
-
-        if ($request->user()->usertype === 'admin') {
-            return redirect('admin/dashboard');
-        } elseif ($request->user()->usertype === 'apm') {
-            return redirect()->intended(route('apm.dashboard')); // Adjust if needed
+        // Attempt login using validated credentials
+        if (Auth::attempt($request->only('email', 'password'), $request->filled('remember'))) {
+            $request->session()->regenerate(); // Regenerate session for security
+    
+            $user = Auth::user();
+            
+            // Flash message for successful login
+            session()->flash('status', 'Welcome back!');
+    
+            // Redirect based on usertype
+            return $this->redirectToDashboard($user);
         }
-
-        return redirect()->intended(route('pelajar.dashboard')); // Ensure this route exists
+    
+        // Log the failed login attempt for debugging
+        \Log::warning('Failed login attempt for email: ' . $request->email);
+    
+        // If login fails, redirect back with errors
+        return back()->withErrors(['login' => 'Invalid credentials or user not found.']);
     }
+    
+    protected function redirectToDashboard($user)
+{
+    \Log::info('Redirecting user based on usertype: ' . $user->usertype); // Debug log
+
+    switch ($user->usertype) {
+        case 'apm':
+            return redirect()->route('apm.dashboard');
+        case 'admin':
+            return redirect()->route('admin.dashboard');
+        default:
+            return redirect()->route('dashboard'); // Default route for other users
+    }
+}
+
+    
+    
+
 
     public function logout(Request $request) {
         Auth::logout();

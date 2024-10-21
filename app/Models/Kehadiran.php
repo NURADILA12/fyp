@@ -11,4 +11,10 @@ class Kehadiran extends Model
 
     protected $table = 'kehadiran'; // Nama jadual yang betul
     protected $fillable = ['student_id', 'date', 'status']; // Senarai kolum yang boleh diisi
+
+    // Relationship with Pelajar model
+    public function student()
+    {
+        return $this->belongsTo(Pelajar::class, 'student_id');
+    }
 }
