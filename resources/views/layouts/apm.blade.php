@@ -8,13 +8,15 @@
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
-  
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
     <style>
         /* Custom sidebar styling */
         body {
             min-height: 100vh;
             display: flex;
             transition: background-color 0.3s, color 0.3s;
+            font-family: 'Poppins', sans-serif;
         }
         .sidebar {
             min-width: 250px;
@@ -25,10 +27,35 @@
             top: 0;
             left: 0;
             transition: all 0.3s ease;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
         }
         .sidebar a {
             color: white;
             text-decoration: none;
+            padding: 10px;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+        .sidebar a i {
+            font-size: 20px;
+            margin-right: 10px;
+            transition: transform 0.3s ease;
+        }
+        .sidebar a:hover {
+            background-color: #343a40;
+            color: #f8f9fa;
+        }
+        .sidebar a:hover i {
+            transform: scale(1.2);
+            color: #f8f9fa;
+        }
+        .sidebar .brand-title h2 {
+            font-weight: bold;
+            text-transform: uppercase;
+            color: #f8f9fa;
+            margin-bottom: 1rem;
         }
         .content {
             margin-left: 250px;
@@ -43,8 +70,15 @@
         }
         .dark-mode .sidebar {
             background-color: #1c1c1c;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
         }
-        .dark-mode .sidebar a {
+        .dark-mode .sidebar a:hover {
+            background-color: #2a2a2a;
+        }
+        .dark-mode .sidebar a i {
+            color: #9f9f9f;
+        }
+        .dark-mode .sidebar a:hover i {
             color: #ffffff;
         }
         .dark-mode .content {
@@ -61,18 +95,17 @@
         <hr>
         <ul class="nav flex-column">
             <li class="nav-item">
-                <a class="nav-link {{ request()->routeIs('apm.dashboard') ? 'active' : '' }}" href="{{ route('apm.dashboard') }}">
+                <a class="nav-link" href="{{ route('apm.dashboard') }}">
                     <i class="bi bi-speedometer2"></i> Dashboard
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link {{ request()->routeIs('apm.kehadiran') ? 'active' : '' }}" href="{{ route('apm.kehadiran') }}">
+                <a class="nav-link" href="{{ route('apm.kehadiran') }}">
                     <i class="bi bi-calendar-check"></i> Kehadiran
                 </a>
             </li>
-    
             <li class="nav-item">
-                <a class="nav-link {{ request()->routeIs('apm.laporan') ? 'active' : '' }}" href="{{ route('apm.laporan') }}">
+                <a class="nav-link" href="{{ route('apm.laporan') }}">
                     <i class="bi bi-file-earmark-text"></i> Laporan
                 </a>
             </li>

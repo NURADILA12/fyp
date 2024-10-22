@@ -27,27 +27,46 @@ class ApmController extends Controller
         ));
     }
     
-    public function storeAttendance(Request $request) {
+    public function store(Request $request) {
+        // Validate the request to ensure attendance and confirmed_status are provided
+        $request->validate([
+            'attendance' => 'required|array',
+            'attendance.*' => 'boolean', // Ensure each attendance status is a boolean
+            'confirmed_status' => 'required|array', // Ensure confirmed_status is provided for each student
+            'confirmed_status.*' => 'boolean', // Ensure each confirmed status is a boolean
+        ]);
+    
         foreach ($request->attendance as $studentId => $status) {
-            Kehadiran::updateOrCreate(
+            // Create or update the attendance record
+            $attendance = Kehadiran::updateOrCreate(
                 ['student_id' => $studentId, 'date' => now()->format('Y-m-d')],
-                ['status' => $status]
+                ['status' => $status ? 'present' : 'absent'] // Assuming you want to store 'present' or 'absent'
             );
+    
+            // Update the confirmed status for the attendance record
+            if (isset($request->confirmed_status[$studentId])) {
+                $attendance->confirmed = $request->confirmed_status[$studentId];
+                $attendance->save();
+            }
         }
-
+    
         return redirect()->route('apm.attendance')->with('success', 'Attendance recorded successfully!');
     }
-
-    public function viewAttendance() {
-        $attendanceRecords = Kehadiran::with('student')->get();
-        return view('apm.kehadiran', compact('attendanceData'));
+    
+    
+    public function kehadiran() {
+        $pelajars = Pelajar::all(); // Fetch all students
+        $kehadiran = Kehadiran::with('pelajar')->get(); // Fetch all attendance records
+        return view('apm.kehadiran', compact('pelajars', 'kehadiran')); // Pass the variables to the view
     }
+    
+    
 
     public function showAttendanceForm() {
         return view('apm.kehadiran'); // Form for attendance
     }
 
-    public function showReport() {
+    public function laporan() {
         return view('apm.laporan'); // Report view
     }
 }

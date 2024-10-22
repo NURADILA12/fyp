@@ -5,78 +5,122 @@
 <div class="container my-5">
     <h1 class="display-4 fw-bold text-center text-primary mb-4">Kehadiran Pelajar</h1>
 
-    <form action="{{ route('apm.kehadiran.store') }}" method="POST">
-      @csrf
-      @foreach($pelajars as $pelajar)
-          <div class="form-check">
-              <input type="checkbox" class="form-check-input" name="kehadiran[{{ $pelajar->id }}]" value="1" {{ $kehadiran_hari_ini->where('pelajar_id', $pelajar->id)->first()->hadir ? 'checked' : '' }}>
-              <label class="form-check-label">{{ $pelajar->nama }}</label>
-          </div>
-      @endforeach
-      <button type="submit" class="btn btn-primary mt-3">Simpan Kehadiran</button>
-  </form>
-  
+    <!-- Butang Tick Semua Hadir & Reset -->
+    <div class="d-flex justify-content-end mb-3">
+        <button type="button" class="btn btn-success me-2" id="tickAllHadir">Tanda Semua Hadir</button>
+        <button type="button" class="btn btn-warning" id="resetPilihan">Reset Pilihan</button>
+    </div>
+
+    <form action="{{ route('apm.store') }}" method="POST">
+        @csrf
+        <table class="table table-hover align-middle">
+            <thead class="bg-gradient text-white" style="background: linear-gradient(45deg, #007bff, #00d4ff);">
+                <tr>
+                    <th scope="col" class="text-center">#</th>
+                    <th scope="col">Nama Pelajar</th>
+                    <th scope="col" class="text-center">Hadir</th>
+                    <th scope="col" class="text-center">Tidak Hadir</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($pelajars as $index => $pelajar)
+                    @php
+                        $attendance = $kehadiran->where('pelajar_id', $pelajar->id)->first();
+                    @endphp
+                    <tr>
+                        <th scope="row" class="text-center">{{ $index + 1 }}</th>
+                        <td>{{ $pelajar->nama }}</td>
+                        <td class="text-center">
+                            <input type="radio" 
+                                   name="kehadiran[{{ $pelajar->id }}]" 
+                                   value="1" 
+                                   class="custom-radio hadir-radio"
+                                   required 
+                                   {{ $attendance && $attendance->hadir ? 'checked' : '' }}>
+                        </td>
+                        <td class="text-center">
+                            <input type="radio" 
+                                   name="kehadiran[{{ $pelajar->id }}]" 
+                                   value="0" 
+                                   class="custom-radio tidak-hadir-radio"
+                                   required 
+                                   {{ $attendance && !$attendance->hadir ? 'checked' : '' }}>
+                        </td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+        <button type="submit" class="btn btn-gradient btn-lg mt-4 w-100 shadow">Simpan Kehadiran</button>
+    </form>
 </div>
 
 <!-- Styling -->
 <style>
     .table {
-        border-collapse: separate;
-        border-spacing: 0 15px;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
     }
 
-    .btn.status-btn {
-        width: 180px;
-        font-weight: bold;
-        transition: background-color 0.3s ease, color 0.3s ease;
+    .table-hover tbody tr:hover {
+        background-color: #eef5f9;
+        transition: background-color 0.4s ease;
     }
 
-    .btn.status-btn.hadir {
-        background-color: #198754;
-        color: white;
+    th, td {
+        padding: 1.2rem;
     }
 
-    .btn.status-btn.tidak-hadir {
-        background-color: #dc3545;
-        color: white;
+    th {
+        font-size: 1.2rem; /* Besarkan saiz fon */
+        font-weight: 700;  /* Tambahkan ketebalan fon */
+        color: #ffffff;    /* Warna teks putih */
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Bayangan teks untuk lebih kontras */
+        background-color: #00aaf8; /* Warna latar belakang oren terang */
+        background-image: linear-gradient(45deg, #00aaf8, #015f96); /* Gradasi warna oren dan kuning */
+        border-bottom: 4px solid #e64a19; /* Garis bawah untuk kesan tegas */
     }
 
-    .table-striped tbody tr:nth-of-type(odd) {
-        background-color: #f9f9f9;
-    }
-
-    .masa {
-        font-style: italic;
-    }
-
-    .btn:hover {
-        transform: translateY(-3px);
+    .custom-radio {
+        width: 24px;
+        height: 24px;
+        appearance: none;
+        border: 2px solid #ccc;
+        border-radius: 50%;
         transition: 0.3s;
+        cursor: pointer;
+    }
+
+    .custom-radio:checked {
+        border-color: #007bff;
+        background: radial-gradient(circle, #007bff 0%, #00d4ff 70%);
+        box-shadow: 0 0 5px #00d4ff;
+    }
+
+    .btn-gradient {
+        background: linear-gradient(45deg, #007bff, #074b58);
+        border: none;
+        color: white;
+        font-weight: bold;
+        transition: transform 0.9s, background 0.3s;
+    }
+
+    .btn-gradient:hover {
+        transform: translateY(-3px);
+        background: linear-gradient(45deg, #0056b3, #00b2e2);
     }
 </style>
 
-<!-- Script -->
+<!-- JavaScript -->
 <script>
-    document.querySelectorAll('.status-btn').forEach((button, index) => {
-        button.addEventListener('click', function () {
-            const now = new Date();
-            const hours = now.getHours().toString().padStart(2, '0');
-            const minutes = now.getMinutes().toString().padStart(2, '0');
-            const formattedTime = `${hours}:${minutes}`;
+    document.getElementById('tickAllHadir').addEventListener('click', function () {
+        const hadirRadios = document.querySelectorAll('.hadir-radio');
+        hadirRadios.forEach(radio => radio.checked = true);
+    });
 
-            const masaElement = document.getElementById(`masa${index + 1}`);
-            masaElement.textContent = formattedTime;
-
-            if (this.classList.contains('hadir')) {
-                this.classList.remove('hadir');
-                this.classList.add('tidak-hadir');
-                this.innerHTML = `<i class="bi bi-dash-circle me-2"></i> Tidak Hadir`;
-            } else {
-                this.classList.remove('tidak-hadir');
-                this.classList.add('hadir');
-                this.innerHTML = `<i class="bi bi-check-circle me-2"></i> Hadir`;
-            }
-        });
+    document.getElementById('resetPilihan').addEventListener('click', function () {
+        const allRadios = document.querySelectorAll('.custom-radio');
+        allRadios.forEach(radio => radio.checked = false);
     });
 </script>
 

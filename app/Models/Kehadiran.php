@@ -13,8 +13,9 @@ class Kehadiran extends Model
     protected $fillable = ['student_id', 'date', 'status']; // Senarai kolum yang boleh diisi
 
     // Relationship with Pelajar model
-    public function student()
-    {
-        return $this->belongsTo(Pelajar::class, 'student_id');
-    }
+  // Inside Kehadiran model
+public function pelajar() {
+    return $this->belongsTo(Pelajar::class, 'student_id');
+}
+
 }

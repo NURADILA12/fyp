@@ -61,22 +61,22 @@
         <hr>
         <ul class="nav flex-column">
             <li class="nav-item">
-                <a class="nav-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}" href="{{ route('dashboard') }}">
+                <a class="nav-link" href="{{ route('admin.dashboard') }}">
                     <i class="bi bi-speedometer2"></i> Dashboard
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link {{ request()->routeIs('admin.kehadiran') ? 'active' : '' }}" href="{{ route('admin.kehadiran') }}">
+                <a class="nav-link" href="{{ route('admin.kehadiran') }}">
                     <i class="bi bi-calendar-check"></i> Kehadiran
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link {{ request()->routeIs('admin.kehadiran') ? 'active' : '' }}" href="{{ route('admin.kehadiran') }}">
+                <a class="nav-link" href="{{ route('admin.pelajar') }}">
                     <i class="bi bi-people"></i> Pelajar
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link {{ request()->routeIs('admin.laporan') ? 'active' : '' }}" href="{{ route('admin.laporan') }}">
+                <a class="nav-link" href="{{ route('admin.laporan') }}">
                     <i class="bi bi-file-earmark-text"></i> Laporan
                 </a>
             </li>
@@ -90,8 +90,8 @@
         <button class="btn btn-primary mt-3" id="darkModeToggle">
             <i class="bi bi-moon-stars"></i> Toggle Dark Mode
         </button>
-        
     </nav>
+    
 
     <!-- Main content -->
     <div class="content">

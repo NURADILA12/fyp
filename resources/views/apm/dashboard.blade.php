@@ -11,9 +11,9 @@
         <div class="col-lg-6 col-md-6">
             <div class="card shadow-lg rounded-4 border-start border-5 border-success">
                 <div class="card-body">
-                    <h5 class="card-title text-success fw-semibold">Kehadiran Hari Ini</h5>
+                    <h5 class="card-title text-success fw-semibold">Bilangan Keseluruhan Pelajar</h5>
                     <p class="display-4 text-warning">{{ $total_tidak_hadir }}</p>
-                    <p class="card-text text-muted">Bilangan pelajar yang tidak hadir hari ini. Sila ambil tindakan susulan.</p>
+                    <p class="card-text text-muted">Bilangan kesemua pelajar yang patut hadir.</p>
                 </div>
             </div>
         </div>

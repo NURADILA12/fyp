@@ -50,7 +50,7 @@ class AdminController extends Controller
         return redirect()->route('admin.laporan')->with('success', 'Laporan berjaya ditambah!');
     }
 
-    public function students()
+    public function pelajar()
 {
     $students = Pelajar::all(); // Assuming you have a Student model
     return view('admin.students', compact('students'));

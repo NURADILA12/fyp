@@ -60,6 +60,7 @@ Route::group(['middleware' => ['role:admin']], function () {
     Route::get('admin/kehadiran', [AdminController::class, 'kehadiran'])->name('admin.kehadiran');
     Route::get('admin/laporan', [AdminController::class, 'laporan'])->name('admin.laporan');
     Route::get('admin/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
+    Route::get('admin/pelajar', [AdminController::class, 'index'])->name('admin.pelajar');
     Route::post('admin/laporan', [AdminController::class, 'store'])->name('admin.store');
 });
 
@@ -67,6 +68,7 @@ Route::group(['middleware' => ['role:apm']], function () {
     Route::get('/apm/dashboard', [ApmController::class, 'index'])->name('apm.dashboard');
     Route::get('/apm/kehadiran', [ApmController::class, 'kehadiran'])->name('apm.kehadiran');
     Route::get('apm/laporan', [ApmController::class, 'laporan'])->name('apm.laporan');
+    Route::post('apm/kehadiran/store', [ApmController::class, 'store'])->name('apm.store');
 });
 
 
