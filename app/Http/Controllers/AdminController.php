@@ -14,10 +14,18 @@ class AdminController extends Controller
        return view('admin.dashboard');
     }
 
+    public function hazikh()
+    {
+       return view('admin.index');
+    }
+
     public function laporan()
     {
-        $laporans = Laporan::all();
-        return view('admin.laporan', compact('laporans'));
+        // Ambil semua laporan dari pangkalan data
+        $laporan = Laporan::all(); // Anda mungkin ingin menambah pengendalian tambahan seperti pagination atau order
+
+        // Hantar data ke pandangan
+        return view('admin.laporan', compact('laporan')); // Pastikan nama pandangan betul
     }
 
     public function store(Request $request)
@@ -76,5 +84,7 @@ public function kehadiran()
     $students = Pelajar::all();
     return view('admin.kehadiran', compact('students'));
 }
+
+
 
 }

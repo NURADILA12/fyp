@@ -4,56 +4,105 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Kehadiran;
+use Carbon\Carbon;
 
 class KehadiranController extends Controller
 {
+    // Paparkan kehadiran untuk APM
     public function index()
     {
-        // Dapatkan kehadiran untuk hari ini
-        $kehadiran_hari_ini = Kehadiran::whereDate('tarikh', today())->get();
+        // Ambil kehadiran untuk hari ini
+        $kehadiran_hari_ini = Kehadiran::whereDate('tarikh', Carbon::today())->get();
 
-        // Kirim data ke view
+        // Hantar data ke view APM dashboard
         return view('apm.dashboard', compact('kehadiran_hari_ini'));
     }
 
-    public function tandakanKehadiran(Request $request)
+    // Simpan kehadiran baru
+    public function store(Request $request)
     {
-        // Validasi input (anda boleh tambah peraturan mengikut keperluan)
-        $request->validate([
-            'kehadiran' => 'required|array',
-            'kehadiran.*' => 'required|in:1,0', // Pastikan nilai kehadiran adalah 1 atau 0
+        foreach ($request->kehadiran as $student_id => $hadir) {
+            // Semak jika kehadiran sudah direkodkan untuk hari ini
+            $existing = Kehadiran::where('student_id', $student_id)
+                ->whereDate('tarikh', Carbon::today())
+                ->first();
 
-        ]);
-
-        // Simpan atau kemaskini kehadiran berdasarkan pelajar_id dan tarikh
-        foreach ($request->kehadiran as $pelajar_id => $hadir) {
-            Kehadiran::updateOrCreate(
-                [
-                    'pelajar_id' => $pelajar_id,
-                    'tarikh' => today()  // Simpan tarikh hari ini
-                ],
-                [
-                    'hadir' => $hadir  // Nilai kehadiran
-                ]
-            );
+            if (!$existing) {
+                // Simpan rekod baru hanya jika tiada rekod sebelum ini
+                Kehadiran::create([
+                    'student_id' => $student_id,
+                    'status' => $hadir,
+                    'tarikh' => Carbon::today(),
+                    'masa' => now(),
+                ]);
+            }
         }
 
-        // Kembalikan mesej berjaya selepas menyimpan
+        return redirect()->back()->with('success', 'Attendance updated successfully');
+    }
+
+    // Fungsi untuk tandakan kehadiran ramai pelajar
+    public function tandakanKehadiran(Request $request)
+    {
+        $request->validate([
+            'kehadiran' => 'required|array',
+            'kehadiran.*' => 'required|in:1,0',
+        ]);
+
+        foreach ($request->kehadiran as $student_id => $hadir) {
+            // Semak jika rekod sudah wujud untuk hari ini
+            $existing = Kehadiran::where('student_id', $student_id)
+                ->whereDate('tarikh', Carbon::today())
+                ->first();
+
+            if (!$existing) {
+                Kehadiran::create([
+                    'student_id' => $student_id,
+                    'status' => $hadir,
+                    'tarikh' => Carbon::today(),
+                    'masa' => now(),
+                ]);
+            }
+        }
+
         return redirect()->route('apm.kehadiran')->with('success', 'Kehadiran berjaya disimpan.');
     }
 
+    // Paparkan data di APM dashboard
     public function dashboard()
     {
-        // Data contoh untuk dipaparkan pada dashboard
-        $kehadiran_hari_ini = Kehadiran::whereDate('tarikh', today())->count(); // Contoh dinamik
-        $pelajar_dipantau = 50;  // Contoh nilai statik
-        $tidak_hadir = Kehadiran::whereDate('tarikh', today())->where('hadir', 0)->count(); // Contoh dinamik
+        $kehadiran_hari_ini = Kehadiran::whereDate('tarikh', Carbon::today())->count();
+        $pelajar_dipantau = 50; // Contoh nilai statik
+        $tidak_hadir = Kehadiran::whereDate('tarikh', Carbon::today())
+            ->where('status', 0) // Guna 'status' dan bukan 'hadir'
+            ->count();
 
-        // Hantar data ke view
         return view('apm.dashboard', [
             'kehadiran_hari_ini' => $kehadiran_hari_ini,
             'pelajar_dipantau' => $pelajar_dipantau,
-            'tidak_hadir' => $tidak_hadir
+            'tidak_hadir' => $tidak_hadir,
         ]);
     }
+
+    // Paparkan data di admin dashboard
+    public function adminDashboard()
+    {
+        // Ambil semua kehadiran bersama maklumat pelajar
+        $kehadiran = Kehadiran::with('pelajar')
+            ->whereDate('tarikh', Carbon::today())
+            ->get();
+
+        return view('admin.dashboard', compact('kehadiran'));
+    }
+
+    public function adminIndex()
+    {
+        // Ambil semua data kehadiran dari database bersama pelajar yang berkaitan
+        $kehadirans = Kehadiran::with('pelajar')->orderBy('tarikh', 'desc')->get();
+
+        // Paparkan view kehadiran admin
+        return view('admin.kehadiran', compact('kehadirans'));
+    }
 }
+
+

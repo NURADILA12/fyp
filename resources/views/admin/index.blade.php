@@ -1,9 +1,10 @@
-@extends('layouts.app') <!-- Assuming you have a main layout file -->
+@extends('layouts.app') <!-- Pastikan ini merujuk kepada fail layout utama anda -->
 
 @section('content')
 <div class="content">
-    <!-- Your existing content -->
     <h2 class="card-title">Senarai Laporan</h2>
+    
+    <!-- Table untuk memaparkan laporan -->
     <table class="table table-striped table-bordered table-hover table-sm">
         <thead>
             <tr>
@@ -14,14 +15,20 @@
             </tr>
         </thead>
         <tbody>
-            @foreach($laporan as $laporanItem)
+            @forelse($laporan as $laporanItem) <!-- Guna forelse untuk menangani kes kosong -->
             <tr>
-                <td>{{ $laporanItem->tarikh }}</td>
+                <td>{{ \Carbon\Carbon::parse($laporanItem->tarikh)->format('d F Y') }}</td> <!-- Format tarikh -->
                 <td>{{ $laporanItem->tajuk }}</td>
                 <td>{{ $laporanItem->keterangan }}</td>
-                <td><img src="{{ asset('uploads/' . $laporanItem->gambar) }}" width="100" alt="Gambar"></td>
+                <td>
+                    <img src="{{ asset('uploads/' . $laporanItem->gambar) }}" width="100" alt="Gambar">
+                </td>
             </tr>
-            @endforeach
+            @empty
+            <tr>
+                <td colspan="4" class="text-center">Tiada laporan tersedia.</td> <!-- Pesan apabila tiada data -->
+            </tr>
+            @endforelse
         </tbody>
     </table>
 </div>

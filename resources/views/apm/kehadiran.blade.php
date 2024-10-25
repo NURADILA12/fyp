@@ -11,22 +11,19 @@
         <button type="button" class="btn btn-warning" id="resetPilihan">Reset Pilihan</button>
     </div>
 
-    <form action="{{ route('apm.store') }}" method="POST">
+    <form action="{{ route('kehadiran.store') }}" method="POST" id="kehadiranForm">
         @csrf
-        <table class="table table-hover align-middle">
-            <thead class="bg-gradient text-white" style="background: linear-gradient(45deg, #007bff, #00d4ff);">
+        <table class="table">
+            <thead>
                 <tr>
-                    <th scope="col" class="text-center">#</th>
-                    <th scope="col">Nama Pelajar</th>
-                    <th scope="col" class="text-center">Hadir</th>
-                    <th scope="col" class="text-center">Tidak Hadir</th>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th class="text-center">Hadir</th>
+                    <th class="text-center">Tidak Hadir</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach($pelajars as $index => $pelajar)
-                    @php
-                        $attendance = $kehadiran->where('pelajar_id', $pelajar->id)->first();
-                    @endphp
                     <tr>
                         <th scope="row" class="text-center">{{ $index + 1 }}</th>
                         <td>{{ $pelajar->nama }}</td>
@@ -34,23 +31,19 @@
                             <input type="radio" 
                                    name="kehadiran[{{ $pelajar->id }}]" 
                                    value="1" 
-                                   class="custom-radio hadir-radio"
-                                   required 
-                                   {{ $attendance && $attendance->hadir ? 'checked' : '' }}>
+                                   class="custom-radio hadir-radio">
                         </td>
                         <td class="text-center">
                             <input type="radio" 
                                    name="kehadiran[{{ $pelajar->id }}]" 
                                    value="0" 
-                                   class="custom-radio tidak-hadir-radio"
-                                   required 
-                                   {{ $attendance && !$attendance->hadir ? 'checked' : '' }}>
+                                   class="custom-radio tidak-hadir-radio">
                         </td>
                     </tr>
                 @endforeach
             </tbody>
         </table>
-        <button type="submit" class="btn btn-gradient btn-lg mt-4 w-100 shadow">Simpan Kehadiran</button>
+        <button type="submit" class="btn btn-primary btn-gradient" id="submitButton">Submit Attendance</button>
     </form>
 </div>
 
@@ -72,13 +65,9 @@
     }
 
     th {
-        font-size: 1.2rem; /* Besarkan saiz fon */
-        font-weight: 700;  /* Tambahkan ketebalan fon */
-        color: #ffffff;    /* Warna teks putih */
-        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Bayangan teks untuk lebih kontras */
-        background-color: #00aaf8; /* Warna latar belakang oren terang */
-        background-image: linear-gradient(45deg, #00aaf8, #015f96); /* Gradasi warna oren dan kuning */
-        border-bottom: 4px solid #e64a19; /* Garis bawah untuk kesan tegas */
+        font-size: 1.2rem;
+        font-weight: 700;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
     }
 
     .custom-radio {
@@ -87,8 +76,8 @@
         appearance: none;
         border: 2px solid #ccc;
         border-radius: 50%;
-        transition: 0.3s;
         cursor: pointer;
+        transition: 0.3s;
     }
 
     .custom-radio:checked {
@@ -102,25 +91,57 @@
         border: none;
         color: white;
         font-weight: bold;
-        transition: transform 0.9s, background 0.3s;
+        transition: transform 0.3s, background 0.3s;
     }
 
     .btn-gradient:hover {
         transform: translateY(-3px);
         background: linear-gradient(45deg, #0056b3, #00b2e2);
     }
+
+    .disabled {
+        pointer-events: none;
+        opacity: 0.6;
+    }
 </style>
 
 <!-- JavaScript -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <script>
     document.getElementById('tickAllHadir').addEventListener('click', function () {
-        const hadirRadios = document.querySelectorAll('.hadir-radio');
-        hadirRadios.forEach(radio => radio.checked = true);
+        document.querySelectorAll('.hadir-radio').forEach(radio => {
+            radio.checked = true;
+        });
+
+        alert('Semua pelajar telah ditandakan hadir.');
     });
 
     document.getElementById('resetPilihan').addEventListener('click', function () {
-        const allRadios = document.querySelectorAll('.custom-radio');
-        allRadios.forEach(radio => radio.checked = false);
+        document.querySelectorAll('.custom-radio').forEach(radio => {
+            radio.checked = false;
+        });
+
+        alert('Pilihan telah di-reset.');
+    });
+
+    // Event submit dengan popup SweetAlert
+    const form = document.getElementById('kehadiranForm');
+    const submitButton = document.getElementById('submitButton');
+
+    form.addEventListener('submit', function (event) {
+        event.preventDefault(); // Halang submit buat sementara
+
+        Swal.fire({
+            icon: 'success',
+            title: 'Kehadiran telah dihantarkan ke Admin!',
+            showConfirmButton: false,
+            timer: 2000 // Popup hilang selepas 2 saat
+        }).then(() => {
+            submitButton.classList.add('disabled');
+            submitButton.textContent = 'Submitting...';
+            form.submit(); // Hantar borang selepas popup
+        });
     });
 </script>
 

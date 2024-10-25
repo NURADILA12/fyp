@@ -9,13 +9,17 @@ class Kehadiran extends Model
 {
     use HasFactory;
 
-    protected $table = 'kehadiran'; // Nama jadual yang betul
-    protected $fillable = ['student_id', 'date', 'status']; // Senarai kolum yang boleh diisi
+    protected $table = 'kehadiran'; // Nama jadual dalam database
 
-    // Relationship with Pelajar model
-  // Inside Kehadiran model
-public function pelajar() {
-    return $this->belongsTo(Pelajar::class, 'student_id');
-}
+    // Kolum yang boleh diisi secara mass-assignment
+    protected $fillable = ['student_id', 'tarikh', 'status', 'masa'];
 
+    // Nyahaktifkan timestamps jika tidak diperlukan
+    public $timestamps = false;
+
+    // Relationship dengan model Pelajar
+    public function pelajar()
+    {
+        return $this->belongsTo(Pelajar::class, 'student_id');
+    }
 }

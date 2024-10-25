@@ -1,64 +1,51 @@
-@extends('layouts.apm')
+@extends('layouts.apm') <!-- Assuming you have a main layout file -->
+
 @section('content')
+<div class="content">
+    <h2 class="card-title">Senarai Laporan</h2>
 
-<div class="container mt-5">
-    <h3 class="text-center mb-4">Hantar Laporan</h3>
-    
-    <div class="card shadow">
-        <div class="card-body">
-            <form action="#" method="POST" enctype="multipart/form-data">
-                @csrf
-                <!-- Tajuk Laporan -->
-                <div class="form-group mb-4">
-                    <label for="report_title" class="form-label">Tajuk Laporan</label>
-                    <input type="text" name="report_title" id="report_title" class="form-control" placeholder="Masukkan tajuk laporan" required>
-                </div>
-
-                <!-- Deskripsi Laporan -->
-                <div class="form-group mb-4">
-                    <label for="report_desc" class="form-label">Deskripsi Laporan</label>
-                    <textarea name="report_desc" id="report_desc" class="form-control" rows="5" placeholder="Terangkan laporan anda di sini" required></textarea>
-                </div>
-
-                <!-- Masa -->
-                <div class="form-group mb-4">
-                    <label for="report_time" class="form-label">Masa Kejadian</label>
-                    <input type="time" name="report_time" id="report_time" class="form-control" required>
-                </div>
-
-                <!-- Tarikh -->
-                <div class="form-group mb-4">
-                    <label for="report_date" class="form-label">Tarikh Kejadian</label>
-                    <input type="date" name="report_date" id="report_date" class="form-control" required>
-                </div>
-
-                <!-- Tempat Kejadian -->
-                <div class="form-group mb-4">
-                    <label for="report_location" class="form-label">Tempat Kejadian</label>
-                    <input type="text" name="report_location" id="report_location" class="form-control" placeholder="Lokasi kejadian" required>
-                </div>
-
-                <!-- Muat Naik Fail (Opsional) -->
-                <div class="form-group mb-4">
-                    <label for="report_file" class="form-label">Muat naik fail (opsional)</label>
-                    <input type="file" name="report_file" id="report_file" class="form-control">
-                </div>
-
-                <!-- Button Hantar -->
-                <div class="text-center">
-                    <button type="submit" class="btn btn-primary px-5">Hantar Laporan</button>
-                </div>
-            </form>
+    <!-- Form for adding a new report -->
+    <form action="{{ route('apm.laporan.store') }}" method="POST" enctype="multipart/form-data" class="mb-4">
+        @csrf
+        <div class="mb-3">
+            <label for="tarikh" class="form-label">Tarikh</label>
+            <input type="date" name="tarikh" id="tarikh" class="form-control" required>
         </div>
-    </div>
+        <div class="mb-3">
+            <label for="tajuk" class="form-label">Tajuk</label>
+            <input type="text" name="tajuk" id="tajuk" class="form-control" required>
+        </div>
+        <div class="mb-3">
+            <label for="keterangan" class="form-label">Keterangan</label>
+            <textarea name="keterangan" id="keterangan" class="form-control" rows="3" required></textarea>
+        </div>
+        <div class="mb-3">
+            <label for="gambar" class="form-label">Gambar</label>
+            <input type="file" name="gambar" id="gambar" class="form-control" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Tambah Laporan</button>
+    </form>
+
+    <!-- Table displaying reports -->
+    <table class="table table-striped table-bordered table-hover table-sm">
+        <thead>
+            <tr>
+                <th>Tarikh</th>
+                <th>Tajuk</th>
+                <th>Keterangan</th>
+                <th>Gambar</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach($laporan    as $laporanItem)
+            <tr>
+                <td>{{ $laporanItem->tarikh }}</td>
+                <td>{{ $laporanItem->tajuk }}</td>
+                <td>{{ $laporanItem->keterangan }}</td>
+                <td><img src="{{ asset('uploads/' . $laporanItem->gambar) }}" width="100" alt="Gambar"></td>
+            </tr>
+            @endforeach
+        </tbody>
+    </table>
 </div>
-
-<!-- Logout Button -->
-<form id="logoutForm" action="{{ route('logout') }}" method="POST" class="mt-5 text-center">
-    @csrf
-    <button type="submit" class="btn btn-danger">
-      <i class="bi bi-box-arrow-right"></i> Logout
-    </button>
-</form>
-
 @endsection

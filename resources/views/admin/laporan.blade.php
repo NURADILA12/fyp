@@ -20,7 +20,7 @@
               </tr>
           </thead>
           <tbody>
-              @foreach($laporans as $laporan)
+              @foreach($laporan as $laporan)
               <tr>
                   <td>{{ $laporan->tarikh }}</td>
                   <td>{{ $laporan->tajuk }}</td>

@@ -71,7 +71,7 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="{{ route('admin.pelajar') }}">
+                <a class="nav-link" href="{{ route('admin.index') }}">
                     <i class="bi bi-people"></i> Pelajar
                 </a>
             </li>
@@ -91,12 +91,10 @@
             <i class="bi bi-moon-stars"></i> Toggle Dark Mode
         </button>
     </nav>
-    
 
     <!-- Main content -->
     <div class="content">
         @yield('content')
-        
     </div>
 
     <!-- Scripts here -->
@@ -105,23 +103,25 @@
     
     <!-- Custom script for dark mode -->
     <script>
-        const darkModeToggle = document.getElementById('darkModeToggle');
-        const body = document.body;
-        const storedTheme = localStorage.getItem('theme');
+        document.addEventListener('DOMContentLoaded', function () {
+            const darkModeToggle = document.getElementById('darkModeToggle');
+            const body = document.body;
+            const storedTheme = localStorage.getItem('theme');
 
-        // Check if dark mode is set in local storage
-        if (storedTheme === 'dark') {
-            body.classList.add('dark-mode');
-        }
-
-        // Toggle dark mode on button click
-        darkModeToggle.addEventListener('click', () => {
-            body.classList.toggle('dark-mode');
-            if (body.classList.contains('dark-mode')) {
-                localStorage.setItem('theme', 'dark');
-            } else {
-                localStorage.setItem('theme', 'light');
+            // Check if dark mode is set in local storage
+            if (storedTheme === 'dark') {
+                body.classList.add('dark-mode');
             }
+
+            // Toggle dark mode on button click
+            darkModeToggle.addEventListener('click', () => {
+                body.classList.toggle('dark-mode');
+                if (body.classList.contains('dark-mode')) {
+                    localStorage.setItem('theme', 'dark');
+                } else {
+                    localStorage.setItem('theme', 'light');
+                }
+            });
         });
     </script>
 </body>

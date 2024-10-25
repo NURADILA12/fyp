@@ -5,9 +5,48 @@
 <div class="container my-5">
     <h1 class="display-4 fw-bold text-center text-primary mb-5">Selamat Datang, {{ Auth::user()->name }}</h1>
 
+    <!-- Image Slider -->
+    <div id="imageCarousel" class="carousel slide mb-5" data-bs-ride="carousel">
+        <div class="carousel-indicators">
+            <button type="button" data-bs-target="#imageCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+            <button type="button" data-bs-target="#imageCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+            <button type="button" data-bs-target="#imageCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+        </div>
+        <div class="carousel-inner rounded-4 shadow-lg">
+            <div class="carousel-item active">
+                <img src="https://source.unsplash.com/1200x400/?education,students" class="d-block w-100" alt="Slide 1">
+                <div class="carousel-caption d-none d-md-block">
+                    <h5>Pendidikan Berkualiti</h5>
+                    <p>Meningkatkan prestasi pelajar dengan sistem kehadiran berkesan.</p>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <img src="https://source.unsplash.com/1200x400/?classroom,learning" class="d-block w-100" alt="Slide 2">
+                <div class="carousel-caption d-none d-md-block">
+                    <h5>Suasana Pembelajaran Interaktif</h5>
+                    <p>Pelajar berkembang dalam suasana positif dan produktif.</p>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <img src="https://source.unsplash.com/1200x400/?teamwork,school" class="d-block w-100" alt="Slide 3">
+                <div class="carousel-caption d-none d-md-block">
+                    <h5>Kehadiran Bermakna</h5>
+                    <p>Membina kerjasama dan disiplin melalui pemantauan yang konsisten.</p>
+                </div>
+            </div>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#imageCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Sebelum</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#imageCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Seterusnya</span>
+        </button>
+    </div>
+
     <!-- Statistik Utama -->
     <div class="row g-4 text-center">
-        <!-- Kehadiran Hari Ini -->
         <div class="col-lg-6 col-md-6">
             <div class="card shadow-lg rounded-4 border-start border-5 border-success">
                 <div class="card-body">
@@ -17,8 +56,6 @@
                 </div>
             </div>
         </div>
-
-        <!-- Tidak Hadir -->
         <div class="col-lg-6 col-md-6">
             <div class="card shadow-lg rounded-4 border-start border-5 border-warning">
                 <div class="card-body">
@@ -54,6 +91,11 @@
     .card:hover {
         transform: scale(1.03);
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .carousel-item img {
+        height: 400px;
+        object-fit: cover;
     }
 
     .btn {

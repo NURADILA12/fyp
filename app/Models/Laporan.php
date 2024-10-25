@@ -9,6 +9,10 @@ class Laporan extends Model
 {
     use HasFactory;
 
+    use HasFactory;
+
+    protected $table = 'laporans'; // Ensure this matches your table name
     protected $fillable = ['tarikh', 'tajuk', 'keterangan', 'gambar'];
-    protected $table = 'laporan';
 }
+
+

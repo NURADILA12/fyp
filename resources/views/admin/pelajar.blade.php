@@ -1,8 +1,15 @@
-@extends('layouts.app');
+@extends('layouts.app')
 @section('content')
   <!-- Main content -->
   <div class="content">
     <!-- Alert Message -->
+    @if (session('success'))
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
+
     <div class="alert alert-info alert-dismissible fade show" role="alert">
       <i class="bi bi-info-circle-fill"></i>
       Selamat Datang di Kehadiran ekokuILPS!
@@ -13,9 +20,9 @@
     <button class="btn btn-primary mb-3" onclick="toggleForm()">Tambah Pelajar</button>
 
     <!-- Tambah Pelajar Form -->
-    <div class="card p-4 add-student-form" id="addStudentForm">
+    <div class="card p-4 add-student-form" id="addStudentForm" style="display:none;">
       <h3 class="card-title">Tambah Pelajar</h3>
-      <form action="{{route('pelajar.store')}}" method="POST">
+      <form action="{{ route('admin.pelajar.store') }}" method="POST">
         @csrf
         <div class="mb-3">
           <label for="nama" class="form-label">Nama Pelajar</label>
@@ -49,16 +56,23 @@
           </tr>
         </thead>
         <tbody>
-          @foreach($pelajar as $pelajar)
+          @foreach($pelajar as $p)
           <tr>
-            <td>{{ $pelajar->nama }}</td>
-            <td>{{ $pelajar->id_pelajar }}</td>
-            <td>{{ $pelajar->semester }}</td>
+            <td>{{ $p->nama }}</td>
+            <td>{{ $p->id_pelajar }}</td>
+            <td>{{ $p->semester }}</td>
           </tr>
           @endforeach
         </tbody>
       </table>
     </div>
   </div>
+
+  <script>
+    function toggleForm() {
+      const form = document.getElementById('addStudentForm');
+      form.style.display = form.style.display === 'none' ? 'block' : 'none';
+    }
+  </script>
 
 @endsection
